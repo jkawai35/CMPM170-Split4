@@ -8,22 +8,43 @@ public class TowerBehavior : MonoBehaviour
     
     [Header("References")]
     [SerializeField] GameObject sprite;
+    [SerializeField] GameObject bulletPrefab;
+    [Header("Atrributes")]
+    [SerializeField] float range;
+    [Header("Bullet Atrributes")]
+    [SerializeField] float size;
+    [SerializeField] float speed;
+    [SerializeField] float distance;
+    [SerializeField] int amount;
+    [SerializeField] float delay;
+    [SerializeField] float damage;
+    [SerializeField] float pierce;
     SpriteRenderer sr;
     bool validPlacement = false;
     GameObject currentSpace = null;
     Vector3 originalPos;
     Vector3 offset;
+    GameObject closestEnemy = null;
 
     List<GameObject> validSpaces=new List<GameObject>();
 
     void Start(){
         sr = sprite.GetComponent<SpriteRenderer>();
         SetTowerAlpha(0.5f);
+        StartCoroutine(Attack());
     }
 
 
     void Update(){
-        UpdateSpriteLocation();
+        if(validPlacement){
+            closestEnemy = GetClosestEnemyInRange();
+            if(closestEnemy!=null){
+                Debug.DrawRay(transform.position,closestEnemy.transform.position-transform.position,Color.blue,0f);
+            }
+        }
+        else{
+            closestEnemy = null;
+        }
     }
     Vector3 MouseWorldPosition(){
         return Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -32,6 +53,38 @@ public class TowerBehavior : MonoBehaviour
         Color color = sr.color;
         color.a = alpha;
         sr.color = color;
+    }
+    //shooting
+    IEnumerator Attack(){
+        while(true){
+            if(closestEnemy==null){
+                yield return null;
+            }
+            else{
+                GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+                bullet.transform.localScale=Vector3.one*size;
+                Rigidbody2D br = bullet.GetComponent<Rigidbody2D>();
+                br.velocity=Vector3.Normalize(closestEnemy.transform.position-transform.position)*speed;
+                yield return new WaitForSeconds(delay);
+            }
+        }
+    }
+
+    //targeting
+    GameObject GetClosestEnemyInRange(){
+        RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, range, Vector3.zero, 0f);
+        GameObject closestEnemy = null;
+        if (hits.Length > 0){
+            RaycastHit2D check = hits
+            .Where(hit => hit.collider.gameObject.CompareTag("Enemy"))
+            .OrderBy(hit => Vector2.Distance(hit.collider.gameObject.transform.position, transform.position))
+            .FirstOrDefault();
+            
+            if(check!=default(RaycastHit2D)){
+                closestEnemy=check.collider.gameObject;
+            }
+        }
+        return closestEnemy;
     }
 
 
@@ -53,7 +106,7 @@ public class TowerBehavior : MonoBehaviour
         SetMouseOverState(false);
     }
     void OnMouseDown(){
-        if(validPlacement){return;}
+        validPlacement=false;
         originalPos=transform.position;
         offset = transform.position-MouseWorldPosition();
     }
@@ -62,12 +115,16 @@ public class TowerBehavior : MonoBehaviour
         if(validPlacement){return;}
         if(currentSpace!=null){
             transform.position=sprite.transform.position;
+            sprite.transform.localPosition=Vector3.zero;
+            validPlacement=true;
         }
     }
 
     void OnMouseDrag(){
         if(validPlacement){return;}
+        SetMouseOverState(true);
         transform.position = MouseWorldPosition()+offset;
+        UpdateSpriteLocation();
     }
 
     //Placement
@@ -83,7 +140,6 @@ public class TowerBehavior : MonoBehaviour
         }
     }
     void OnTriggerEnter2D(Collider2D collider) {
-        Debug.Log("triggerEnterUpdate");
         GameObject other = collider.gameObject;
         if (other.CompareTag("Space") && !validSpaces.Contains(other)) {
             validSpaces.Add(other);
