@@ -2,6 +2,7 @@ using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Mathematics;
 
 public class TowerBehavior : MonoBehaviour
 {
@@ -14,11 +15,11 @@ public class TowerBehavior : MonoBehaviour
     [Header("Bullet Atrributes")]
     [SerializeField] float size;
     [SerializeField] float speed;
-    [SerializeField] float distance;
     [SerializeField] int amount;
     [SerializeField] float delay;
+    [SerializeField] float spread;
     [SerializeField] float damage;
-    [SerializeField] float pierce;
+    [SerializeField] int pierce;
     SpriteRenderer sr;
     bool validPlacement = false;
     GameObject currentSpace = null;
@@ -61,10 +62,19 @@ public class TowerBehavior : MonoBehaviour
                 yield return null;
             }
             else{
-                GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
-                bullet.transform.localScale=Vector3.one*size;
-                Rigidbody2D br = bullet.GetComponent<Rigidbody2D>();
-                br.velocity=Vector3.Normalize(closestEnemy.transform.position-transform.position)*speed;
+                float spreadAmount = 360f*spread;
+                for(int i =0;i<amount;i++){
+                    GameObject bullet = Instantiate(bulletPrefab, transform.position, quaternion.identity);
+                    BulletBehavior bh = bullet.GetComponent<BulletBehavior>();
+                    bh.distance = range;
+                    bh.damage = damage;
+                    bh.pierce = pierce;
+                    bullet.transform.localScale=Vector3.one*size;
+                    Rigidbody2D br = bullet.GetComponent<Rigidbody2D>();
+                    float angle = (i - (amount - 1) / 2.0f) * (spreadAmount / amount);
+                    Quaternion rotation = Quaternion.Euler(0, 0, angle);
+                    br.velocity=rotation*Vector3.Normalize(closestEnemy.transform.position-transform.position)*speed;
+                }
                 yield return new WaitForSeconds(delay);
             }
         }
