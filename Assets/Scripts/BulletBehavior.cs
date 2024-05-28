@@ -16,4 +16,16 @@ public class BulletBehavior : MonoBehaviour
             Destroy(gameObject);
         }        
     }
+    void OnTriggerEnter2D(Collider2D collider) {
+        GameObject other = collider.gameObject;
+        if (other.CompareTag("Enemy")) {
+            if(pierce>0){
+                pierce-=1;
+            }
+            else{
+                Destroy(other);
+                Destroy(gameObject);
+            }
+        }
+    }
 }

@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: -7838957008270062354}
   - component: {fileID: 2875602502911570085}
   m_Layer: 0
-  m_Name: Tower
+  m_Name: TowerOne
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -135,7 +135,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 7601669047868034692, guid: 942cd38d57e5551498bd2f7ef6e2be57, type: 3}
   range: 10
   size: 0.2
-  speed: 20
+  speed: 40
   amount: 1
   delay: 1
   spread: 0

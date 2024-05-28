@@ -23,7 +23,7 @@ public class TowerBehavior : MonoBehaviour
     SpriteRenderer sr;
     bool validPlacement = false;
     GameObject currentSpace = null;
-    Vector3 originalPos;
+    bool validOffset=false;
     Vector3 offset;
     GameObject closestEnemy = null;
 
@@ -31,20 +31,19 @@ public class TowerBehavior : MonoBehaviour
 
     void Start(){
         sr = sprite.GetComponent<SpriteRenderer>();
-        SetTowerAlpha(0.5f);
         StartCoroutine(Attack());
     }
 
 
     void Update(){
-        if(validPlacement){
+        if(!validPlacement){
+            MouseControls();
+        }
+        else{
             closestEnemy = GetClosestEnemyInRange();
             if(closestEnemy!=null){
                 Debug.DrawRay(transform.position,closestEnemy.transform.position-transform.position,Color.blue,0f);
             }
-        }
-        else{
-            closestEnemy = null;
         }
     }
     Vector3 MouseWorldPosition(){
@@ -99,43 +98,37 @@ public class TowerBehavior : MonoBehaviour
 
 
     //Mouse Controls
-    void SetMouseOverState(bool state){
-        if(state){
-            SetTowerAlpha(1f);
-        }
-        else{
-            SetTowerAlpha(.5f);
-        }
-    }
-    void OnMouseEnter(){
-        if(validPlacement){return;}
-        SetMouseOverState(true);
-    }
-    void OnMouseExit(){
-        if(validPlacement){return;}
-        SetMouseOverState(false);
-    }
-    void OnMouseDown(){
-        validPlacement=false;
-        originalPos=transform.position;
-        offset = transform.position-MouseWorldPosition();
-    }
-
-    void OnMouseUp(){
-        if(validPlacement){return;}
-        if(currentSpace!=null){
-            transform.position=sprite.transform.position;
-            sprite.transform.localPosition=Vector3.zero;
-            validPlacement=true;
+    void OnMouseOver(){
+        if(!validPlacement){return;}
+        if(Input.GetMouseButtonDown(1)){
+            Destroy(gameObject);
         }
     }
 
-    void OnMouseDrag(){
-        if(validPlacement){return;}
-        SetMouseOverState(true);
-        transform.position = MouseWorldPosition()+offset;
-        UpdateSpriteLocation();
+    void MouseControls(){
+        if(Input.GetMouseButton(0)){
+            if(!validOffset){
+                offset = transform.position-MouseWorldPosition();
+                validOffset=true;
+            }
+            transform.position = MouseWorldPosition()+offset;
+            UpdateSpriteLocation();
+        }
+        if(Input.GetMouseButtonUp(0)){
+            if(currentSpace!=null){
+                transform.position=sprite.transform.position;
+                sprite.transform.localPosition=Vector3.zero;
+                validPlacement=true;
+                StoreManager.Instance.SetStorePanel(true);
+            }
+            else{
+                Destroy(gameObject);
+                StoreManager.Instance.SetStorePanel(true);
+            }
+        }
     }
+
+    
 
     //Placement
     void UpdateSpriteLocation(){
@@ -145,7 +138,7 @@ public class TowerBehavior : MonoBehaviour
         }
         else{
             GameObject closestSpace = validSpaces.OrderBy(space => Vector3.Distance(space.transform.position, transform.position)).First();
-            sprite.transform.position=closestSpace.transform.position;
+            sprite.transform.position=closestSpace.transform.position+Vector3.back;
             currentSpace = closestSpace;
         }
     }
