@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8925906956432576323}
   - component: {fileID: 5103114090793958376}
   - component: {fileID: 3531458761637652981}
-  - component: {fileID: 7225385301553283706}
+  - component: {fileID: 6739663025537249149}
   - component: {fileID: -3052774102720293889}
   m_Layer: 0
   m_Name: Enemy
@@ -114,7 +114,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!58 &7225385301553283706
+--- !u!58 &6739663025537249149
 CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -148,7 +148,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 5.12
 --- !u!114 &-3052774102720293889
 MonoBehaviour:
   m_ObjectHideFlags: 0
