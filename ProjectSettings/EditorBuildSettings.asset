@@ -8,4 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/LukeTestScene.unity
+    guid: 2a96ccc574178e74e82e7096160c68d5
   m_configObjects: {}
