@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/LukeTestScene.unity
     guid: 2a96ccc574178e74e82e7096160c68d5
+  - enabled: 1
+    path: Assets/Scenes/EndScene.unity
+    guid: 9ce01bdbbf5061e469d8e9795bfffe1b
   m_configObjects: {}
