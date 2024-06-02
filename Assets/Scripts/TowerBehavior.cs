@@ -18,6 +18,7 @@ public class TowerBehavior : MonoBehaviour
     [SerializeField] int amount;
     [SerializeField] float delay;
     [SerializeField] float spread;
+    public int value;
     [SerializeField] float damage;
     [SerializeField] int pierce;
     SpriteRenderer sr;
@@ -101,6 +102,7 @@ public class TowerBehavior : MonoBehaviour
     void OnMouseOver(){
         if(!validPlacement){return;}
         if(Input.GetMouseButtonDown(1)){
+            ValueManager.Instance.updateMoney(value/2);
             Destroy(gameObject);
         }
     }
@@ -122,6 +124,7 @@ public class TowerBehavior : MonoBehaviour
                 StoreManager.Instance.SetStorePanel(true);
             }
             else{
+                ValueManager.Instance.updateMoney(value);
                 Destroy(gameObject);
                 StoreManager.Instance.SetStorePanel(true);
             }

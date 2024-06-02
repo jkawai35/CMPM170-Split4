@@ -133,13 +133,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sprite: {fileID: 7579825235634071315}
   bulletPrefab: {fileID: 7601669047868034692, guid: 942cd38d57e5551498bd2f7ef6e2be57, type: 3}
-  tmp: {fileID: 2427319819138347883, guid: 24ea0008044ae814c82bf75a16005fed, type: 3}
   range: 10
   size: 0.2
   speed: 40
   amount: 1
   delay: 1
   spread: 0
+  value: 100
   damage: 0
   pierce: 0
 --- !u!61 &-7838957008270062354

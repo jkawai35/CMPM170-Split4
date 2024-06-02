@@ -23,6 +23,8 @@ public class BulletBehavior : MonoBehaviour
                 pierce-=1;
             }
             else{
+                ValueManager.Instance.updateMoney(10);
+                EnemySpawner.onEnemyDestroy.Invoke();
                 Destroy(other);
                 Destroy(gameObject);
             }
